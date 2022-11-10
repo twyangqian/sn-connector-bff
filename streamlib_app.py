@@ -1,6 +1,6 @@
 import streamlit as st
+
 from config import SquadEnum, connectDataBase, TrelloConfig
-import pandas as pd
 
 database = connectDataBase()
 
@@ -37,23 +37,3 @@ select_squad_config.checkLists = select_card_check_lists
 if st.button('保存配置'):
     database.save()
     st.write('保存成功')
-
-st.header('数据展示')
-df = pd.read_csv('./parts.csv')
-st.write(df)
-
-
-@st.experimental_memo
-def convert_df(df):
-    return df.to_csv(index=False).encode('utf-8')
-
-
-csv = convert_df(df)
-
-st.download_button(
-    "Press to Download",
-    csv,
-    "file.csv",
-    "text/csv",
-    key='download-csv'
-)
