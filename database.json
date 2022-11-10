@@ -1,0 +1,22 @@
+{
+    "trelloConfig": [
+        {
+            "checkLists": [
+                "问题标签",
+                "问题根因",
+                "修复方式"
+            ],
+            "defaultListCardName": "TODO",
+            "squadName": "PARTS",
+            "trelloBoardId": "123"
+        },
+        {
+            "checkLists": [
+                "hh"
+            ],
+            "defaultListCardName": "123",
+            "squadName": "RWO",
+            "trelloBoardId": "123"
+        }
+    ]
+}
