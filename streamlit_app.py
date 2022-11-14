@@ -1,8 +1,11 @@
 import streamlit as st
 
-from config import SquadEnum, connectDataBase, TrelloConfig
+from config import SquadEnum, TrelloConfig, TrelloConfigCheckList
 
-database = connectDataBase()
+from sn_connector_client import sn_connector_api
+import json
+
+api = sn_connector_api()
 
 st.title('ServiceNow -> Trello Auto Sync Data')
 
@@ -12,11 +15,17 @@ select_squad = st.sidebar.selectbox(
     (SquadEnum.PARTS.value, SquadEnum.RWO.value, SquadEnum.SALES.value)
 )
 
-select_squad_config = database.getConfigBySquad(select_squad)
+select_squad_config_res = api.get_trello_config_by_squad(select_squad)
+select_squad_config = None
+
+if select_squad_config_res.status_code != 200:
+    st.write('无法连接sn-connector，请重试')
+else:
+    trello_config_json = json.loads(select_squad_config_res.text)
+    select_squad_config = TrelloConfig(**trello_config_json)
 
 if select_squad_config is None:
     select_squad_config = TrelloConfig(select_squad, '', '', [])
-    database.trelloConfig.append(select_squad_config)
 
 st.header('trello card配置')
 st.subheader('配置trello board id')
@@ -29,11 +38,11 @@ trello_card_default_list_card_name = st.text_input('Trello default list card nam
 select_squad_config.defaultListCardName = trello_card_default_list_card_name
 
 st.subheader('配置自定义创建card的checklist，多个用,分隔')
-trello_card_check_lists = st.text_input('Trello card check lists', ','.join(select_squad_config.checkLists))
+trello_card_check_lists = st.text_input('Trello card check lists', ','.join([checkList.checkListName for checkList in select_squad_config.trelloConfigCheckLists]))
 select_card_check_lists = st.multiselect('选择你需要创建的checklist，注意先后顺序', trello_card_check_lists.split(','),
-                                         select_squad_config.checkLists)
-select_squad_config.checkLists = select_card_check_lists
+                                         [checkList.checkListName for checkList in select_squad_config.trelloConfigCheckLists])
+select_squad_config.trelloConfigCheckLists = [TrelloConfigCheckList(checkList) for checkList in select_card_check_lists]
 
 if st.button('保存配置'):
-    database.save()
+    api.create_or_update_trello_config(select_squad_config)
     st.write('保存成功')

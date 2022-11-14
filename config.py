@@ -1,4 +1,3 @@
-import codecs
 import json
 from enum import Enum
 
@@ -10,41 +9,26 @@ class SquadEnum(Enum):
 
 
 class TrelloConfig(object):
-    squadName = ''
+    squad = ''
     trelloBoardId = ''
     defaultListCardName = ''
-    checkLists = []
+    trelloConfigCheckLists = []
 
-    def __init__(self, squadName, trelloBoardId: str, defaultListCardName: str, checkLists: []):
-        self.squadName = squadName
+    def __init__(self, squad, trelloBoardId: str, defaultListCardName: str, trelloConfigCheckLists: []):
+        self.squad = squad
         self.trelloBoardId = trelloBoardId
         self.defaultListCardName = defaultListCardName
-        self.checkLists = checkLists
+        self.trelloConfigCheckLists = [TrelloConfigCheckList(**checkList) for checkList in trelloConfigCheckLists]
 
     def addCheckList(self, checkList):
-        self.checkLists.append(checkList)
-
-
-class DataBase(object):
-    trelloConfig = []
-
-    def __init__(self, trelloConfig):
-        self.trelloConfig = [TrelloConfig(**config) for config in trelloConfig]
-
-    def getConfigBySquad(self, squadName):
-        for config in self.trelloConfig:
-            if config.squadName == squadName:
-                return config
+        self.trelloConfigCheckLists.append(checkList)
 
     def toJson(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4, ensure_ascii=False)
 
-    def save(self):
-        with codecs.open("database.json", "w", encoding="utf-8") as save:
-            save.write(self.toJson())
 
+class TrelloConfigCheckList(object):
+    checkListName = ''
 
-def connectDataBase():
-    with open('database.json', 'r') as read:
-        database_file = json.load(read)
-        return DataBase(**database_file)
+    def __init__(self, checkListName: str):
+        self.checkListName = checkListName
