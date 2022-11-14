@@ -2,6 +2,6 @@ version: '2.0'
 services:
   web:
     build: .
-    image: twyangqian/sn-connector-bff:v0.1
+    image: twyangqian/sn-connector-bff:v0.1.1
     ports:
     - "8000:8000"
