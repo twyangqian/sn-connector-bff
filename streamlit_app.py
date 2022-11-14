@@ -12,7 +12,8 @@ st.title('ServiceNow -> Trello Auto Sync Data')
 # Using object notation
 select_squad = st.sidebar.selectbox(
     "请选择Squad",
-    (SquadEnum.PARTS.value, SquadEnum.RWO.value, SquadEnum.SALES.value)
+    (SquadEnum.PARTS.value, SquadEnum.RWO.value, SquadEnum.SALES.value, SquadEnum.ACCOUNTING.value,
+     SquadEnum.WARRANTY.value, SquadEnum.WORKSHOP.value, SquadEnum.OPERATION.value, SquadEnum.ACCIDENT.value)
 )
 
 select_squad_config_res = api.get_trello_config_by_squad(select_squad)
@@ -38,9 +39,11 @@ trello_card_default_list_card_name = st.text_input('Trello default list card nam
 select_squad_config.defaultListCardName = trello_card_default_list_card_name
 
 st.subheader('配置自定义创建card的checklist，多个用,分隔')
-trello_card_check_lists = st.text_input('Trello card check lists', ','.join([checkList.checkListName for checkList in select_squad_config.trelloConfigCheckLists]))
+trello_card_check_lists = st.text_input('Trello card check lists', ','.join(
+    [checkList.checkListName for checkList in select_squad_config.trelloConfigCheckLists]))
 select_card_check_lists = st.multiselect('选择你需要创建的checklist，注意先后顺序', trello_card_check_lists.split(','),
-                                         [checkList.checkListName for checkList in select_squad_config.trelloConfigCheckLists])
+                                         [checkList.checkListName for checkList in
+                                          select_squad_config.trelloConfigCheckLists])
 select_squad_config.trelloConfigCheckLists = [TrelloConfigCheckList(checkList) for checkList in select_card_check_lists]
 
 if st.button('保存配置'):
