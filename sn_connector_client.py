@@ -1,6 +1,6 @@
 import requests
 
-from config import TrelloConfig
+from dto.trello_config import TrelloConfig
 
 
 class sn_connector_api:
@@ -19,7 +19,9 @@ class sn_connector_api:
             'Sec-Fetch-Site': 'same-origin',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.109 Safari/537.36',
         }
-        self.sn_connector_api = 'http://10.205.129.7:8080/api/sn-connector/trello/'
+        self.host = 'http://127.0.0.1:8080'
+        self.sn_connector_api = self.host + '/api/sn-connector/trello/'
+        self.sn_connector_report_api = self.host + '/api/sn-connector/report'
 
     def get_trello_config_by_squad(self, squad: str):
         request_params = {
@@ -30,3 +32,6 @@ class sn_connector_api:
     def create_or_update_trello_config(self, trelloConfig: TrelloConfig):
         return requests.post(self.sn_connector_api + 'config', headers=self.headers,
                              data=trelloConfig.toJson().encode('utf-8'))
+
+    def get_parts_open_tickets_report(self):
+        return requests.get(self.sn_connector_report_api + '/parts/open-tickets', headers=self.headers)

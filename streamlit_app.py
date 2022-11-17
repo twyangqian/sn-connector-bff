@@ -1,16 +1,16 @@
 import streamlit as st
 
 from dto.trello_config import TrelloConfig, TrelloConfigCheckList
-from enum.squad import SquadEnum
+from enums.squad import SquadEnum
 
 from sn_connector_client import sn_connector_api
+from parts.show_parts_report import show_open_ticket_report
 import json
 
 api = sn_connector_api()
 
 st.title('ServiceNow -> Trello Auto Sync Data')
 
-# Using object notation
 select_squad = st.sidebar.selectbox(
     "请选择Squad",
     (SquadEnum.PARTS.value, SquadEnum.RWO.value, SquadEnum.SALES.value, SquadEnum.ACCOUNTING.value,
@@ -21,7 +21,7 @@ select_squad_config_res = api.get_trello_config_by_squad(select_squad)
 select_squad_config = None
 
 if select_squad_config_res.status_code != 200:
-    st.write('无法连接sn-connector，请重试')
+    st.error('无法连接sn-connector，请重试')
 else:
     trello_config_json = json.loads(select_squad_config_res.text)
     select_squad_config = TrelloConfig(**trello_config_json)
@@ -49,4 +49,6 @@ select_squad_config.trelloConfigCheckLists = [TrelloConfigCheckList(checkList) f
 
 if st.button('保存配置'):
     api.create_or_update_trello_config(select_squad_config)
-    st.write('保存成功')
+    st.success('保存成功')
+
+show_open_ticket_report(api)
