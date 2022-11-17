@@ -1,6 +1,7 @@
 import streamlit as st
 
-from config import SquadEnum, TrelloConfig, TrelloConfigCheckList
+from dto.trello_config import TrelloConfig, TrelloConfigCheckList
+from enum.squad import SquadEnum
 
 from sn_connector_client import sn_connector_api
 import json
