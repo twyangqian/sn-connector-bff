@@ -51,4 +51,5 @@ if st.button('保存配置'):
     api.create_or_update_trello_config(select_squad_config)
     st.success('保存成功')
 
-show_open_ticket_report(api)
+if select_squad == SquadEnum.PARTS.value:
+    show_open_ticket_report(api)
