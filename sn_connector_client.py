@@ -21,7 +21,7 @@ class sn_connector_api:
             'Sec-Fetch-Site': 'same-origin',
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.109 Safari/537.36',
         }
-        self.host = 'http://127.0.0.1:8080'
+        self.host = 'http://10.205.129.7:8080'
         self.sn_connector_api = self.host + '/api/sn-connector/trello/'
         self.sn_connector_report_api = self.host + '/api/sn-connector/report'
         self.session = requests.Session()
