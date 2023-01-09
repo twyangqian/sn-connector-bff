@@ -29,9 +29,9 @@ class sn_connector_api:
         self.adapter = HTTPAdapter(max_retries=self.retry)
         self.session.mount('http://', self.adapter)
 
-    def get_trello_config_by_squad(self, squad: str):
+    def get_trello_config_by_group(self, group: str):
         request_params = {
-            'squad': squad
+            'group': group
         }
         return self.session.get(self.sn_connector_api + 'config', headers=self.headers, params=request_params)
 

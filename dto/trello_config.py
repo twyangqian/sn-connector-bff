@@ -2,13 +2,13 @@ import json
 
 
 class TrelloConfig(object):
-    squad = ''
+    group = ''
     trelloBoardId = ''
     defaultListCardName = ''
     trelloConfigCheckLists = []
 
-    def __init__(self, squad, trelloBoardId: str, defaultListCardName: str, trelloConfigCheckLists: []):
-        self.squad = squad
+    def __init__(self, group, trelloBoardId: str, defaultListCardName: str, trelloConfigCheckLists: []):
+        self.group = group
         self.trelloBoardId = trelloBoardId
         self.defaultListCardName = defaultListCardName
         self.trelloConfigCheckLists = [TrelloConfigCheckList(**checkList) for checkList in trelloConfigCheckLists]
